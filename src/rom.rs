@@ -8,6 +8,12 @@ fn test_cartridge_info_size() {
     assert_eq!(CARTRIDGE_INFO_SIZE, mem::size_of::<CartridgeInfo>());
 }
 
+#[derive(Debug)]
+pub enum CartType {
+    LoROM,
+    HiROM,
+}
+
 pub struct CartridgeInfo {
     title: [u8; 21],
     rom_makeup: u8,
@@ -30,12 +36,16 @@ impl CartridgeInfo {
             mem::transmute(*data.clone())
         }
     }
+
+    pub fn checksum_is_valid(&self) -> bool {
+        (self.inverse_rom_checksum ^ self.rom_checksum) == 0xffff
+    }
 }
 
 impl fmt::Debug for CartridgeInfo {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         f.debug_struct("CartridgeInfo")
-            .field("title", &str::from_utf8(&self.title).unwrap())
+            .field("title", &String::from_utf8_lossy(&self.title))
             .field("rom_makeup", &self.rom_makeup)
             .field("rom_type", &self.rom_type)
             .field("rom_size", &self.rom_size)

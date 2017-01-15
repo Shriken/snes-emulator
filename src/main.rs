@@ -9,11 +9,13 @@ use std::path::Path;
 use std::process;
 
 mod rom;
+mod arch;
 
 fn main() {
     let mut args = env::args();
     let exe_name = args.next().unwrap();
 
+    // Parse args.
     let rom_filename: String;
     match args.next() {
         Some(f) => rom_filename = f,
@@ -23,6 +25,7 @@ fn main() {
         },
     }
 
+    // Read the rom into memory.
     let rom: Vec<u8>;
     match read_rom(&rom_filename) {
         Ok(bytes) => rom = bytes,
@@ -32,14 +35,10 @@ fn main() {
         },
     }
 
-    println!(
-        "rom {} is {} Mb long",
-        rom_filename,
-        rom.len() * 8 / (1024 * 1024)
-    );
-
-    let info = rom::CartridgeInfo::from(&rom[0x7fc0 .. 0x7fe4]);
-    println!("{:#?}", info);
+    let mut arch = arch::Arch::new();
+    arch.load_rom(rom);
+    arch.run()
+        .unwrap_or_else(|err| error(&*err));
 }
 
 fn read_rom<P: AsRef<Path>>(rom_fn: P) -> Result<Vec<u8>, Box<Error>> {
