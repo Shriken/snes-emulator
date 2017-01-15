@@ -1,3 +1,6 @@
+#[macro_use]
+extern crate arrayref;
+
 use std::env;
 use std::error::Error;
 use std::fs;
@@ -5,7 +8,7 @@ use std::io::Read;
 use std::path::Path;
 use std::process;
 
-mod types;
+mod rom;
 
 fn main() {
     let mut args = env::args();
@@ -29,7 +32,14 @@ fn main() {
         },
     }
 
-    println!("rom {} is {} KB long", rom_filename, rom.len() / 1024);
+    println!(
+        "rom {} is {} Mb long",
+        rom_filename,
+        rom.len() * 8 / (1024 * 1024)
+    );
+
+    let info = rom::CartridgeInfo::from(&rom[0x7fc0 .. 0x7fe4]);
+    println!("{:#?}", info);
 }
 
 fn read_rom<P: AsRef<Path>>(rom_fn: P) -> Result<Vec<u8>, Box<Error>> {
