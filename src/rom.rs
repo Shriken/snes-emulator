@@ -1,6 +1,5 @@
 use std::fmt;
 use std::mem;
-use std::str;
 
 const CARTRIDGE_INFO_SIZE: usize = 36;
 #[test]
@@ -12,6 +11,7 @@ fn test_cartridge_info_size() {
 pub enum CartType {
     LoROM,
     HiROM,
+    // TODO: support other rom types
 }
 
 pub struct CartridgeInfo {

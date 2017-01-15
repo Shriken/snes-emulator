@@ -26,6 +26,13 @@ impl Arch {
 
         println!("rom is {} Mb long", rom.len() * 8 / (1024 * 1024));
 
+        let cart_type = self.get_rom_type(&rom);
+        println!("cart is a {:?}", cart_type);
+
+        // TODO: put rom in correct place in memory
+    }
+
+    fn get_rom_type(&self, rom: &Vec<u8>) -> rom::CartType {
         // Fetch LoROM and HiROM cartridge infos.
         let get_info = |rom: &Vec<u8>, addr| {
             rom::CartridgeInfo::from(
@@ -40,15 +47,11 @@ impl Arch {
         let hirom_valid = hirom_info.checksum_is_valid();
         assert!(lorom_valid ^ hirom_valid);
 
-        let cart_type = if lorom_valid {
+        if lorom_valid {
             rom::CartType::LoROM
         } else {
             rom::CartType::HiROM
-        };
-
-        println!("cart is {:?}", cart_type);
-
-        // TODO: put rom in correct place in memory
+        }
     }
 
     pub fn run(&mut self) -> Result<(), Box<Error>> {
