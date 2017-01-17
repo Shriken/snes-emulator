@@ -15,18 +15,18 @@ pub enum CartType {
 }
 
 pub struct CartridgeInfo {
-    title: [u8; 21],
-    rom_makeup: u8,
-    rom_type: u8,
-    rom_size: u8,
-    sram_size: u8,
-    country: u8,
-    license: u8,
-    game_version: u8,
-    inverse_rom_checksum: u16,
-    rom_checksum: u16,
-    nmi_vbl_vector: u16,
-    reset_vector: u16,
+    pub title: [u8; 21],
+    pub rom_makeup: u8,
+    pub rom_type: u8,
+    pub rom_size: u8,
+    pub sram_size: u8,
+    pub country: u8,
+    pub license: u8,
+    pub game_version: u8,
+    pub inverse_rom_checksum: u16,
+    pub rom_checksum: u16,
+    pub nmi_vbl_vector: u16,
+    pub reset_vector: u16,
 }
 
 impl CartridgeInfo {
