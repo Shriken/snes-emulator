@@ -3,13 +3,13 @@ use std::mem;
 
 use rom;
 
-const RAM_SIZE: usize = 0;
+const RAM_SIZE: usize = 0x100 * 0x10000;
 const LOROM_CART_INFO_START: usize = 0x7fc0;
 const HIROM_CART_INFO_START: usize = 0xffc0;
 
 pub struct Arch {
     cpu: CPU,
-    ram: [u8; RAM_SIZE],
+    ram: Vec<u8>,
     // TODO
 }
 
@@ -17,7 +17,7 @@ impl Arch {
     pub fn new() -> Arch {
         Arch {
             cpu: CPU::new(),
-            ram: [0; RAM_SIZE],
+            ram: vec![0; RAM_SIZE],
         }
     }
 
